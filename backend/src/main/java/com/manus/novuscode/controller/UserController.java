@@ -4,9 +4,12 @@ import com.manus.novuscode.common.BaseResponse;
 import com.manus.novuscode.common.ResultUtils;
 import com.manus.novuscode.exception.ErrorCode;
 import com.manus.novuscode.exception.ThrowUtils;
+import com.manus.novuscode.model.dto.user.UserLoginRequest;
 import com.manus.novuscode.model.dto.user.UserRegisterRequest;
+import com.manus.novuscode.model.vo.LoginUserVO;
 import com.mybatisflex.core.paginate.Page;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +51,22 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+    /**
+     * 用户登录
+     *
+     * @param userLoginRequest 用户登录请求
+     * @param request          请求对象
+     * @return 脱敏后的用户登录信息
+     */
+    @PostMapping("/login")
+    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
+        String userAccount = userLoginRequest.getUserAccount();
+        String userPassword = userLoginRequest.getUserPassword();
+        LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
+        return ResultUtils.success(loginUserVO);
+    }
+    
     /**
      * 保存。
      *

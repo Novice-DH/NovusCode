@@ -1,9 +1,14 @@
 package com.manus.novuscode.service;
 
+import com.manus.novuscode.model.dto.user.UserQueryRequest;
 import com.manus.novuscode.model.vo.LoginUserVO;
+import com.manus.novuscode.model.vo.UserVO;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
 import com.manus.novuscode.model.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 /**
  *  服务层。
@@ -55,6 +60,30 @@ public interface UserService extends IService<User> {
      */
     boolean userLogout(HttpServletRequest request);
 
+    /**
+     * 获取脱敏后的用户信息
+     *
+     * @param user 用户信息
+     * @return
+     */
+    UserVO getUserVO(User user);
+
+    /**
+     * 获取脱敏后的用户信息（分页）
+     *
+     * @param userList 用户列表
+     * @return
+     */
+    List<UserVO> getUserVOList(List<User> userList);
+
+    /**
+     * 根据查询条件构造数据查询参数
+     *
+     * @param userQueryRequest
+     * @return
+     */
+    QueryWrapper getQueryWrapper(UserQueryRequest userQueryRequest);
+    
     /**
      * 加密
      *

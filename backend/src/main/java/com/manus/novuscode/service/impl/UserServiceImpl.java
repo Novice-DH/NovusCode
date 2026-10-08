@@ -103,6 +103,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>  implements U
     }
 
     @Override
+    public User getLoginUser(HttpServletRequest request) {
+        // 先判断用户是否登录
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        if (currentUser == null || currentUser.getId() == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        // 从数据库查询当前用户信息
+        long userId = currentUser.getId();
+        currentUser = this.getById(userId);
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        return currentUser;
+    }
+
+    @Override
+    public boolean userLogout(HttpServletRequest request) {
+        // 先判断用户是否登录
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (userObj == null) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "用户未登录");
+        }
+        // 移除登录态
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
+        return true;
+    }
+
+    @Override
     public String getEncryptPassword(String userPassword) {
         // 盐值，混淆密码
         final String SALT = "manus";

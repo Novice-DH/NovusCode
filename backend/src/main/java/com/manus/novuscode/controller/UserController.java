@@ -67,6 +67,25 @@ public class UserController {
         return ResultUtils.success(loginUserVO);
     }
     
+    @GetMapping("/get/login")
+    public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        return ResultUtils.success(userService.getLoginUserVO(loginUser));
+    }
+
+    /**
+     * 用户注销
+     *
+     * @param request 请求对象
+     * @return
+     */
+    @PostMapping("/logout")
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
+        ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
+        boolean result = userService.userLogout(request);
+        return ResultUtils.success(result);
+    }
+    
     /**
      * 保存。
      *
